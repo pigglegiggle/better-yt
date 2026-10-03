@@ -55,7 +55,7 @@ export class SettingsModal {
 
     const subtitle = document.createElement('p');
     subtitle.className = 'better-yt-settings-subtitle';
-    subtitle.textContent = 'YT Desktop Preferences';
+    subtitle.textContent = 'Better YT Preferences';
     titleBox.appendChild(subtitle);
 
     header.appendChild(titleBox);
@@ -696,7 +696,7 @@ export class SettingsModal {
 
     const title = document.createElement('h3');
     title.className = 'better-yt-title';
-    title.textContent = 'YT Desktop';
+    title.textContent = 'Better YT';
     aboutBox.appendChild(title);
 
     const desc = document.createElement('p');

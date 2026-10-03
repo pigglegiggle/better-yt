@@ -48,7 +48,7 @@ pub fn run() {
             let app_nav = app_handle.clone();
 
             let mut builder = tauri::WebviewWindowBuilder::new(&app_handle, "main", url)
-                .title("YT Desktop")
+                .title("Better YT")
                 .inner_size(saved_state.width as f64, saved_state.height as f64)
                 .min_inner_size(900.0, 600.0)
                 .decorations(true)
@@ -104,7 +104,7 @@ pub fn run() {
 }
 
 fn setup_app_menu(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
-    let app_name = "YT Desktop";
+    let app_name = "Better YT";
 
     let app_submenu = SubmenuBuilder::new(app, app_name)
         .item(&PredefinedMenuItem::about(app, Some(app_name), None)?)
@@ -186,7 +186,7 @@ fn setup_app_menu(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>
 }
 
 fn setup_tray(app: &mut tauri::App) {
-    let header_item = match MenuItem::with_id(app, "tray_header", "YT Desktop", false, None::<&str>)
+    let header_item = match MenuItem::with_id(app, "tray_header", "Better YT", false, None::<&str>)
     {
         Ok(item) => item,
         Err(_) => return,

@@ -135,7 +135,7 @@ async function bootstrap(): Promise<void> {
   // 6. Report Readiness in development
   if (import.meta.env && import.meta.env.DEV) {
     showToast({
-      message: 'YT Desktop Active',
+      message: 'Better YT Active',
       durationMs: 2500,
     });
   }

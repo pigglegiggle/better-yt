@@ -158,7 +158,7 @@ pub fn save_settings(app: AppHandle, settings: AppSettings) -> Result<(), String
 #[tauri::command]
 pub fn get_app_info() -> AppInfo {
     AppInfo {
-        name: "YT Desktop",
+        name: "Better YT",
         version: env!("CARGO_PKG_VERSION"),
         platform: platform::get_platform(),
         arch: platform::get_arch(),

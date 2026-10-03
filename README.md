@@ -1,8 +1,8 @@
-# YT Desktop (Better-YT)
+# Better YT
 
 A high-performance, polished, cross-platform YouTube desktop client built with **Tauri v2**, **Rust**, and **TypeScript**. 
 
-YT Desktop wraps the official YouTube web experience inside a native desktop frame, providing modular client-side UX controls, distraction-free viewing, public **SponsorBlock** integration, custom media shortcuts, system tray support, and native navigation controls without modifying authentication or bypassing paid features.
+**Better YT** wraps the official YouTube web experience inside a native desktop frame, providing modular client-side UX controls, distraction-free viewing, public **SponsorBlock** integration, custom media shortcuts, system tray support, and native navigation controls without modifying authentication or bypassing paid features.
 
 ---
 

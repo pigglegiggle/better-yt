@@ -40,9 +40,9 @@ export class TitleBar {
 
     const logoSvg = createSvgElement(
       `<svg viewBox="0 0 32 32" width="20" height="20" fill="none" class="better-yt-bar-logo">
-        <rect width="32" height="32" rx="8" fill="#27272a" />
-        <path d="M13 10L22 16L13 22V10Z" fill="#ef4444" />
-        <path d="M13 10L18 16L13 22V10Z" fill="#ffffff" fill-opacity="0.9" />
+        <rect width="32" height="32" rx="7" fill="#1e242d" />
+        <path d="M11 8L22 16L11 24V8Z" fill="#e11d48" />
+        <path d="M11 24L19 16L14 12L11 24Z" fill="#ffffff" />
       </svg>`
     );
     if (logoSvg) {
@@ -51,7 +51,7 @@ export class TitleBar {
 
     const title = document.createElement('span');
     title.className = 'better-yt-bar-title';
-    title.textContent = 'YT Desktop';
+    title.textContent = 'Better YT';
     left.appendChild(title);
 
     // Nav controls: Back, Forward, Reload

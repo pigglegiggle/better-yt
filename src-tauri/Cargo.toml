@@ -1,7 +1,7 @@
 [package]
-name = "yt-desktop"
+name = "better-yt"
 version = "1.0.0"
-description = "YT Desktop - Unofficial YouTube desktop client"
+description = "Better YT - Unofficial modern YouTube desktop client"
 authors = ["YT Desktop Contributors"]
 edition = "2021"
 
