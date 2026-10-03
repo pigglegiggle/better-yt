@@ -1,8 +1,25 @@
 # Better YT
 
-A high-performance, polished, cross-platform YouTube desktop client built with **Tauri v2**, **Rust**, and **TypeScript**. 
+A high-performance, polished, cross-platform YouTube client built with **Tauri v2**, **Rust**, and **TypeScript** for Desktop and Mobile.
 
-**Better YT** wraps the official YouTube web experience inside a native desktop frame, providing modular client-side UX controls, distraction-free viewing, public **SponsorBlock** integration, custom media shortcuts, system tray support, and native navigation controls without modifying authentication or bypassing paid features.
+---
+
+## 📥 Downloads (Release v1.0.0)
+
+Direct install binaries are available on the [**Latest Release (v1.0.0)**](https://github.com/pigglegiggle/better-yt/releases/tag/v1.0.0):
+
+| Platform | Format | Direct Download |
+| :--- | :--- | :--- |
+| **Android** | `.apk` (ARM64) | [**Better-YT_1.0.0_arm64.apk**](https://github.com/pigglegiggle/better-yt/releases/download/v1.0.0/Better-YT_1.0.0_arm64.apk) |
+| **iOS / iPadOS** | `.ipa` (Sideload) | [**Better-YT_1.0.0.ipa**](https://github.com/pigglegiggle/better-yt/releases/download/v1.0.0/Better-YT_1.0.0.ipa) |
+| **Windows** | `.exe` (Installer) | [**Better.YT_1.0.0_x64-setup.exe**](https://github.com/pigglegiggle/better-yt/releases/download/v1.0.0/Better.YT_1.0.0_x64-setup.exe) |
+| **Windows** | `.msi` (Package) | [**Better.YT_1.0.0_x64_en-US.msi**](https://github.com/pigglegiggle/better-yt/releases/download/v1.0.0/Better.YT_1.0.0_x64_en-US.msi) |
+| **macOS** | `.dmg` (Apple Silicon) | [**Better.YT_1.0.0_aarch64.dmg**](https://github.com/pigglegiggle/better-yt/releases/download/v1.0.0/Better.YT_1.0.0_aarch64.dmg) |
+| **macOS** | `.zip` (Portable) | [**Better-YT-1.0.0-macOS-arm64.zip**](https://github.com/pigglegiggle/better-yt/releases/download/v1.0.0/Better-YT-1.0.0-macOS-arm64.zip) |
+| **Linux** | `.AppImage` (Universal) | [**Better.YT_1.0.0_amd64.AppImage**](https://github.com/pigglegiggle/better-yt/releases/download/v1.0.0/Better.YT_1.0.0_amd64.AppImage) |
+| **Linux** | `.deb` (Debian/Ubuntu) | [**Better.YT_1.0.0_amd64.deb**](https://github.com/pigglegiggle/better-yt/releases/download/v1.0.0/Better.YT_1.0.0_amd64.deb) |
+
+> 💡 **iOS / iPadOS Sideloading Note**: The `.ipa` can be installed on non-jailbroken iPhones and iPads using popular sideloading utilities such as [AltStore](https://altstore.io/), [SideStore](https://sidestore.io/), [Sideloadly](https://sideloadly.io/), [TrollStore](https://trollstore.app/), or Xcode / iOS App Signer.
 
 ---
 
