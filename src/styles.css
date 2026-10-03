@@ -1,0 +1,854 @@
+/**
+ * Better-YT Desktop Styling
+ * Dark-first, desktop-native aesthetic inspired by Discord & VS Code.
+ */
+
+:root {
+  --byt-bg-base: #0f0f11;
+  --byt-bg-surface: #18181b;
+  --byt-bg-surface-hover: #27272a;
+  --byt-bg-surface-active: #3f3f46;
+  --byt-border-subtle: #27272a;
+  --byt-border-focus: #52525b;
+  --byt-text-primary: #f4f4f5;
+  --byt-text-secondary: #a1a1aa;
+  --byt-text-muted: #71717a;
+  --byt-accent: #ef4444;
+  --byt-accent-hover: #dc2626;
+  --byt-danger: #e11d48;
+  --byt-danger-hover: #be123c;
+  --byt-success: #10b981;
+  --byt-radius-sm: 4px;
+  --byt-radius-md: 6px;
+  --byt-radius-lg: 10px;
+  --byt-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --byt-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Reset for our injected components */
+.better-yt-desktop-bar,
+.better-yt-search-overlay,
+.better-yt-settings-modal,
+.better-yt-toast-container,
+.better-yt-offline-overlay,
+.better-yt-home-placeholder {
+  box-sizing: border-box;
+  font-family: var(--byt-font-sans);
+  color: var(--byt-text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.better-yt-desktop-bar *,
+.better-yt-search-overlay *,
+.better-yt-settings-modal *,
+.better-yt-toast-container *,
+.better-yt-offline-overlay *,
+.better-yt-home-placeholder * {
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   Desktop Control Bar
+   ========================================================================== */
+.better-yt-desktop-bar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 38px;
+  background-color: var(--byt-bg-surface);
+  border-bottom: 1px solid var(--byt-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  z-index: 999990;
+  user-select: none;
+  font-size: 13px;
+}
+
+.better-yt-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.better-yt-bar-logo {
+  display: block;
+}
+
+.better-yt-bar-title {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--byt-text-primary);
+  margin-right: 4px;
+}
+
+.better-yt-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background-color: var(--byt-bg-base);
+  border: 1px solid var(--byt-border-subtle);
+  border-radius: var(--byt-radius-sm);
+  padding: 1px 3px;
+}
+
+.better-yt-nav-icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--byt-text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 3px;
+  line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+
+.better-yt-nav-icon-btn:hover {
+  background-color: var(--byt-bg-surface-hover);
+  color: var(--byt-text-primary);
+}
+
+.better-yt-bar-center {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.better-yt-jump-btn {
+  background: transparent;
+  border: none;
+  color: var(--byt-text-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: var(--byt-radius-sm);
+  transition: background 0.15s, color 0.15s;
+}
+
+.better-yt-jump-btn:hover {
+  background-color: var(--byt-bg-surface-hover);
+  color: var(--byt-text-primary);
+}
+
+.better-yt-search-trigger-btn {
+  background-color: var(--byt-bg-base);
+  border: 1px solid var(--byt-border-subtle);
+  border-radius: var(--byt-radius-md);
+  color: var(--byt-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 6px;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.better-yt-search-trigger-btn:hover {
+  border-color: var(--byt-border-focus);
+  color: var(--byt-text-secondary);
+}
+
+.better-yt-search-trigger-btn kbd {
+  font-family: var(--byt-font-mono);
+  background-color: var(--byt-bg-surface-hover);
+  border: 1px solid var(--byt-border-subtle);
+  border-radius: 3px;
+  font-size: 10px;
+  padding: 1px 4px;
+  color: var(--byt-text-secondary);
+}
+
+.better-yt-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.better-yt-sb-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: var(--byt-success);
+  border-radius: 10px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.better-yt-sb-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--byt-success);
+}
+
+.better-yt-icon-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--byt-text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 3px 7px;
+  border-radius: var(--byt-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.better-yt-icon-btn:hover {
+  background-color: var(--byt-bg-surface-hover);
+  color: var(--byt-text-primary);
+}
+
+/* ==========================================================================
+   Native Search Overlay
+   ========================================================================== */
+.better-yt-search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 15vh;
+  opacity: 0;
+  transition: opacity 0.18s ease-out;
+}
+
+.better-yt-search-overlay.visible {
+  opacity: 1;
+}
+
+.better-yt-search-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+}
+
+.better-yt-search-box {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  background-color: var(--byt-bg-surface);
+  border: 1px solid var(--byt-border-focus);
+  border-radius: var(--byt-radius-lg);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.better-yt-search-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--byt-bg-base);
+  border: 1px solid var(--byt-border-subtle);
+  border-radius: var(--byt-radius-md);
+  padding: 8px 12px;
+}
+
+.better-yt-search-input-wrapper:focus-within {
+  border-color: var(--byt-accent);
+}
+
+.better-yt-search-icon {
+  color: var(--byt-text-muted);
+  flex-shrink: 0;
+}
+
+.better-yt-search-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--byt-text-primary);
+  font-size: 15px;
+}
+
+.better-yt-search-hint {
+  font-size: 12px;
+  color: var(--byt-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 4px;
+}
+
+.better-yt-search-hint kbd {
+  font-family: var(--byt-font-mono);
+  background-color: var(--byt-bg-surface-hover);
+  border: 1px solid var(--byt-border-subtle);
+  border-radius: 3px;
+  font-size: 11px;
+  padding: 1px 5px;
+  color: var(--byt-text-secondary);
+}
+
+/* ==========================================================================
+   Settings Modal (Discord/VS Code style density)
+   ========================================================================== */
+.better-yt-settings-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 999998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.18s ease-out;
+}
+
+.better-yt-settings-modal.visible {
+  opacity: 1;
+}
+
+.better-yt-settings-backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.better-yt-settings-dialog {
+  position: relative;
+  width: 760px;
+  max-width: 90vw;
+  height: 600px;
+  max-height: 85vh;
+  background-color: var(--byt-bg-surface);
+  border: 1px solid var(--byt-border-subtle);
+  border-radius: var(--byt-radius-lg);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.better-yt-settings-header {
+  height: 52px;
+  border-bottom: 1px solid var(--byt-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+}
+
+.better-yt-settings-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--byt-text-primary);
+}
+
+.better-yt-settings-subtitle {
+  margin: 0;
+  font-size: 11px;
+  color: var(--byt-text-muted);
+}
+
+.better-yt-settings-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--byt-text-muted);
+  font-size: 20px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 4px 8px;
+  border-radius: var(--byt-radius-sm);
+  transition: color 0.15s, background 0.15s;
+}
+
+.better-yt-settings-close-btn:hover {
+  color: var(--byt-text-primary);
+  background-color: var(--byt-bg-surface-hover);
+}
+
+.better-yt-settings-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.better-yt-settings-nav {
+  width: 190px;
+  background-color: var(--byt-bg-base);
+  border-right: 1px solid var(--byt-border-subtle);
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.better-yt-nav-btn {
+  background: transparent;
+  border: none;
+  color: var(--byt-text-secondary);
+  font-size: 13px;
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: var(--byt-radius-md);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.better-yt-nav-btn:hover {
+  background-color: var(--byt-bg-surface);
+  color: var(--byt-text-primary);
+}
+
+.better-yt-nav-btn.active {
+  background-color: var(--byt-bg-surface-hover);
+  color: var(--byt-text-primary);
+  font-weight: 600;
+}
+
+.better-yt-settings-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.better-yt-section-heading {
+  margin: 0 0 6px 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--byt-text-muted);
+  font-weight: 700;
+}
+
+.better-yt-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.better-yt-setting-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 80%;
+}
+
+.better-yt-setting-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--byt-text-primary);
+}
+
+.better-yt-setting-desc {
+  font-size: 12px;
+  color: var(--byt-text-muted);
+}
+
+/* Switch */
+.better-yt-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.better-yt-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.better-yt-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: var(--byt-bg-surface-active);
+  border-radius: 22px;
+  transition: 0.2s;
+}
+
+.better-yt-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.better-yt-switch input:checked + .better-yt-slider {
+  background-color: var(--byt-accent);
+}
+
+.better-yt-switch input:checked + .better-yt-slider:before {
+  transform: translateX(18px);
+}
+
+/* Select */
+.better-yt-select {
+  background-color: var(--byt-bg-base);
+  border: 1px solid var(--byt-border-subtle);
+  border-radius: var(--byt-radius-md);
+  color: var(--byt-text-primary);
+  padding: 6px 12px;
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+}
+
+.better-yt-select:focus {
+  border-color: var(--byt-border-focus);
+}
+
+/* Danger Box */
+.better-yt-danger-box {
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid rgba(225, 29, 72, 0.3);
+  border-radius: var(--byt-radius-md);
+  background-color: rgba(225, 29, 72, 0.05);
+}
+
+.danger-text {
+  color: var(--byt-danger) !important;
+}
+
+/* Settings Footer */
+.better-yt-settings-footer {
+  height: 52px;
+  border-top: 1px solid var(--byt-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background-color: var(--byt-bg-base);
+  flex-shrink: 0;
+}
+
+.better-yt-settings-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Buttons */
+.better-yt-btn {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: var(--byt-radius-md);
+  cursor: pointer;
+  border: none;
+  transition: background 0.15s, opacity 0.15s;
+}
+
+.better-yt-btn-primary {
+  background-color: var(--byt-accent);
+  color: white;
+}
+
+.better-yt-btn-primary:hover {
+  background-color: var(--byt-accent-hover);
+}
+
+.better-yt-btn-secondary {
+  background-color: var(--byt-bg-surface-hover);
+  color: var(--byt-text-primary);
+}
+
+.better-yt-btn-secondary:hover {
+  background-color: var(--byt-bg-surface-active);
+}
+
+.better-yt-btn-danger {
+  background-color: var(--byt-danger);
+  color: white;
+}
+
+.better-yt-btn-danger:hover {
+  background-color: var(--byt-danger-hover);
+}
+
+/* Confirmation Dialog */
+.better-yt-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.better-yt-confirm-box {
+  background-color: var(--byt-bg-surface);
+  border: 1px solid var(--byt-border-subtle);
+  border-radius: var(--byt-radius-lg);
+  padding: 20px;
+  max-width: 400px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+}
+
+.better-yt-confirm-title {
+  margin: 0 0 8px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.better-yt-confirm-text {
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  color: var(--byt-text-secondary);
+  line-height: 1.4;
+}
+
+.better-yt-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   Toasts
+   ========================================================================== */
+.better-yt-toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.better-yt-toast {
+  pointer-events: auto;
+  background-color: var(--byt-bg-surface);
+  border: 1px solid var(--byt-border-focus);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-radius: var(--byt-radius-md);
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.better-yt-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.better-yt-toast-text {
+  color: var(--byt-text-primary);
+}
+
+.better-yt-toast-action {
+  background-color: var(--byt-bg-surface-hover);
+  border: 1px solid var(--byt-border-subtle);
+  color: var(--byt-accent);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: var(--byt-radius-sm);
+  transition: background 0.15s;
+}
+
+.better-yt-toast-action:hover {
+  background-color: var(--byt-bg-surface-active);
+}
+
+.better-yt-toast-close {
+  background: transparent;
+  border: none;
+  color: var(--byt-text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   Offline / Error Screen & Fallback Container
+   ========================================================================== */
+.yt-desktop-body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--byt-bg-base);
+  color: var(--byt-text-primary);
+  font-family: var(--byt-font-sans);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.yt-desktop-fallback-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+}
+
+.better-yt-offline-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999997;
+  background-color: var(--byt-bg-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.yt-desktop-offline-card,
+.better-yt-offline-card {
+  width: 440px;
+  background-color: var(--byt-bg-surface);
+  border: 1px solid var(--byt-border-subtle);
+  border-radius: var(--byt-radius-lg);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5);
+}
+
+.yt-desktop-title,
+.better-yt-offline-title {
+  margin: 16px 0 6px 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--byt-text-primary);
+}
+
+.yt-desktop-subtitle,
+.better-yt-offline-desc {
+  margin: 0 0 20px 0;
+  font-size: 13px;
+  color: var(--byt-text-secondary);
+  line-height: 1.5;
+}
+
+.yt-desktop-status-pill,
+.better-yt-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--byt-bg-base);
+  border: 1px solid var(--byt-border-subtle);
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  color: var(--byt-text-muted);
+  margin-bottom: 20px;
+}
+
+.yt-desktop-status-dot,
+.better-yt-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #eab308;
+}
+
+.better-yt-status-dot.offline {
+  background-color: var(--byt-danger);
+}
+
+.yt-desktop-action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.yt-desktop-footer {
+  margin-top: 24px;
+  font-size: 11px;
+  color: var(--byt-text-muted);
+}
+
+/* Distraction Free Homepage Placeholder */
+.better-yt-home-placeholder {
+  margin: 40px auto;
+  max-width: 600px;
+  text-align: center;
+  padding: 32px 24px;
+  background-color: var(--byt-bg-surface);
+  border: 1px solid var(--byt-border-subtle);
+  border-radius: var(--byt-radius-lg);
+}
+
+.better-yt-home-placeholder h2 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.better-yt-home-placeholder p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--byt-text-secondary);
+}
+
+/* About Screen Meta Grid */
+.better-yt-about-card {
+  padding: 8px 0;
+}
+
+.better-yt-disclaimer-badge {
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--byt-accent);
+  padding: 8px 12px;
+  border-radius: var(--byt-radius-md);
+  font-size: 12px;
+  margin: 12px 0 16px 0;
+}
+
+.better-yt-meta-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.better-yt-meta-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 13px;
+}
+
+.better-yt-meta-label {
+  color: var(--byt-text-secondary);
+}
+
+.better-yt-meta-value {
+  color: var(--byt-text-primary);
+  font-family: var(--byt-font-mono);
+  font-size: 12px;
+}

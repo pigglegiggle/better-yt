@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YT Desktop</title>
+    <link rel="stylesheet" href="/src/styles.css" />
+  </head>
+  <body class="yt-desktop-body">
+    <div id="app" class="yt-desktop-fallback-container">
+      <div class="yt-desktop-offline-card">
+        <div class="yt-desktop-logo">
+          <svg viewBox="0 0 64 64" width="72" height="72" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="64" height="64" rx="16" fill="#18181b" />
+            <rect x="2" y="2" width="60" height="60" rx="14" stroke="#27272a" stroke-width="2" />
+            <path d="M26 20L44 32L26 44V20Z" fill="#ef4444" />
+            <path d="M26 20L36 32L26 44V20Z" fill="#ffffff" fill-opacity="0.9" />
+          </svg>
+        </div>
+        <h1 class="yt-desktop-title">YT Desktop</h1>
+        <p class="yt-desktop-subtitle">Unofficial desktop client for accessing YouTube</p>
+        
+        <div id="yt-desktop-status-area" class="yt-desktop-status-area">
+          <div class="yt-desktop-status-pill">
+            <span class="yt-desktop-status-dot"></span>
+            <span id="yt-desktop-status-text">Checking connection...</span>
+          </div>
+          <p id="yt-desktop-message-text" class="yt-desktop-message">
+            Loading YouTube... If you are offline, check your connection.
+          </p>
+          <div class="yt-desktop-action-buttons">
+            <button id="yt-desktop-retry-btn" class="yt-desktop-btn yt-desktop-btn-primary">
+              Retry Connection
+            </button>
+            <button id="yt-desktop-open-settings-btn" class="yt-desktop-btn yt-desktop-btn-secondary">
+              Settings
+            </button>
+          </div>
+        </div>
+
+        <div class="yt-desktop-footer">
+          <span>Not affiliated with, endorsed by, or sponsored by YouTube or Google.</span>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
