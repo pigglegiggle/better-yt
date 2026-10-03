@@ -4,6 +4,11 @@ on:
   push:
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target to build (all, android, ios)'
+        required: false
+        default: 'all'
 
 permissions:
   contents: write
@@ -12,6 +17,7 @@ jobs:
   build-android:
     name: Build Android APK
     runs-on: ubuntu-latest
+    if: github.event.inputs.target == 'all' || github.event.inputs.target == 'android' || github.event.inputs.target == null
 
     steps:
       - name: Checkout repository
@@ -56,17 +62,44 @@ jobs:
       - name: Build Android APK
         run: npx tauri android build --apk --target aarch64
 
-      - name: Locate and Package APK
-        id: find_apk
+      - name: Locate, Align and Sign APK
+        id: sign_apk
         run: |
-          APK_FILE=$(find src-tauri/gen/android -name "*.apk" | head -n 1)
-          if [ -n "$APK_FILE" ]; then
-            cp "$APK_FILE" Better-YT_1.0.0_arm64.apk
-            echo "apk_path=Better-YT_1.0.0_arm64.apk" >> $GITHUB_OUTPUT
+          RAW_APK=$(find src-tauri/gen/android -name "*.apk" | head -n 1)
+          echo "Found raw APK: $RAW_APK"
+          if [ -z "$RAW_APK" ]; then
+            echo "Error: No APK found!"
+            exit 1
           fi
 
+          BUILD_TOOLS_DIR=$(ls -d $ANDROID_HOME/build-tools/* | sort -V | tail -n 1)
+          ZIPALIGN="$BUILD_TOOLS_DIR/zipalign"
+          APKSIGNER="$BUILD_TOOLS_DIR/apksigner"
+          echo "Using zipalign: $ZIPALIGN"
+          echo "Using apksigner: $APKSIGNER"
+
+          # 1. Align to 4-byte boundaries
+          "$ZIPALIGN" -v -p 4 "$RAW_APK" Better-YT_aligned.apk
+
+          # 2. Sign with release keystore (v1, v2, and v3 schemes enabled)
+          "$APKSIGNER" sign \
+            --ks src-tauri/signing/better-yt.keystore \
+            --ks-pass pass:betteryt123 \
+            --key-pass pass:betteryt123 \
+            --ks-key-alias betteryt \
+            --v1-signing-enabled true \
+            --v2-signing-enabled true \
+            --v3-signing-enabled true \
+            --out Better-YT_1.0.0_arm64.apk \
+            Better-YT_aligned.apk
+
+          # 3. Verify signature
+          "$APKSIGNER" verify --verbose Better-YT_1.0.0_arm64.apk
+
+          echo "apk_path=Better-YT_1.0.0_arm64.apk" >> $GITHUB_OUTPUT
+
       - name: Upload APK to Release
-        if: steps.find_apk.outputs.apk_path != ''
+        if: steps.sign_apk.outputs.apk_path != ''
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v1.0.0
@@ -77,6 +110,7 @@ jobs:
   build-ios:
     name: Build iOS IPA
     runs-on: macos-latest
+    if: github.event.inputs.target == 'all' || github.event.inputs.target == 'ios' || github.event.inputs.target == null
 
     steps:
       - name: Checkout repository
