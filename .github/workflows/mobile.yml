@@ -113,15 +113,21 @@ jobs:
       - name: Build iOS App (Unsigned for Sideloading)
         run: npx tauri ios build --no-sign --target aarch64
 
-      - name: Package IPA
+      - name: Locate and Package IPA
         id: package_ipa
         run: |
-          APP_PATH=$(find src-tauri/gen/ios -name "*.app" | grep -v "Simulator" | head -n 1)
-          if [ -n "$APP_PATH" ]; then
-            mkdir -p Payload
-            cp -r "$APP_PATH" Payload/
-            zip -rq Better-YT_1.0.0.ipa Payload
+          IPA_FILE=$(find src-tauri/gen/apple -name "*.ipa" | head -n 1)
+          if [ -n "$IPA_FILE" ]; then
+            cp "$IPA_FILE" Better-YT_1.0.0.ipa
             echo "ipa_path=Better-YT_1.0.0.ipa" >> $GITHUB_OUTPUT
+          else
+            APP_PATH=$(find src-tauri/gen/apple -name "*.app" | grep -v "Simulator" | head -n 1)
+            if [ -n "$APP_PATH" ]; then
+              mkdir -p Payload
+              cp -r "$APP_PATH" Payload/
+              zip -rq Better-YT_1.0.0.ipa Payload
+              echo "ipa_path=Better-YT_1.0.0.ipa" >> $GITHUB_OUTPUT
+            fi
           fi
 
       - name: Upload IPA to Release
