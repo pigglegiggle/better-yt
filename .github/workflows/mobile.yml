@@ -111,7 +111,7 @@ jobs:
         run: npx tauri ios init --ci --skip-targets-install
 
       - name: Build iOS App (Unsigned for Sideloading)
-        run: npx tauri ios build --no-signing --target aarch64-apple-ios
+        run: npx tauri ios build --no-sign --target aarch64-apple-ios
 
       - name: Package IPA
         id: package_ipa
