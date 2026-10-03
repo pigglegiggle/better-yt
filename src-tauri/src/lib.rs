@@ -1,8 +1,11 @@
 pub mod commands;
 pub mod platform;
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 pub mod window;
 
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 use tauri::menu::{MenuBuilder, MenuItem, PredefinedMenuItem, SubmenuBuilder};
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 use tauri::tray::TrayIconBuilder;
 use tauri::{Manager, WebviewUrl};
 use tauri_plugin_opener::OpenerExt;
@@ -11,15 +14,22 @@ const INJECT_SCRIPT: &str = include_str!("../../dist/inject.js");
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    tauri::Builder::default()
-        .plugin(tauri_plugin_opener::init())
-        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+    #[allow(unused_mut)]
+    let mut builder = tauri::Builder::default()
+        .plugin(tauri_plugin_opener::init());
+
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+    {
+        builder = builder.plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             if let Some(window) = app.get_webview_window("main") {
                 let _ = window.unminimize();
                 let _ = window.show();
                 let _ = window.set_focus();
             }
-        }))
+        }));
+    }
+
+    builder
         .invoke_handler(tauri::generate_handler![
             commands::get_settings,
             commands::save_settings,
@@ -31,14 +41,16 @@ pub fn run() {
         ])
         .setup(|app| {
             let app_handle = app.handle().clone();
+            #[cfg(not(any(target_os = "android", target_os = "ios")))]
             let saved_state = window::load_saved_window_state(&app_handle);
             let settings = commands::get_settings(app_handle.clone());
 
-            // Build Application Menu
-            setup_app_menu(app)?;
-
-            // Build System Tray
-            setup_tray(app);
+            // Build Application Menu & Tray on desktop platforms
+            #[cfg(not(any(target_os = "android", target_os = "ios")))]
+            {
+                setup_app_menu(app)?;
+                setup_tray(app);
+            }
 
             // Construct Main Webview Window with initialization script
             let yt_url = url::Url::parse("https://www.youtube.com")
@@ -47,15 +59,21 @@ pub fn run() {
 
             let app_nav = app_handle.clone();
 
-            let mut builder = tauri::WebviewWindowBuilder::new(&app_handle, "main", url)
+            #[allow(unused_mut)]
+            let mut win_builder = tauri::WebviewWindowBuilder::new(&app_handle, "main", url)
                 .title("Better YT")
-                .inner_size(saved_state.width as f64, saved_state.height as f64)
-                .min_inner_size(900.0, 600.0)
-                .decorations(true)
                 .initialization_script(INJECT_SCRIPT);
 
+            #[cfg(not(any(target_os = "android", target_os = "ios")))]
+            {
+                win_builder = win_builder
+                    .inner_size(saved_state.width as f64, saved_state.height as f64)
+                    .min_inner_size(900.0, 600.0)
+                    .decorations(true);
+            }
+
             // External navigation interception
-            builder = builder.on_navigation(move |nav_url| {
+            win_builder = win_builder.on_navigation(move |nav_url| {
                 let url_str = nav_url.as_str();
                 if commands::is_internal_url(url_str) {
                     true
@@ -70,39 +88,45 @@ pub fn run() {
                 }
             });
 
-            let win = builder.build()?;
-            window::restore_window_state(&win, &saved_state);
+            let win = win_builder.build()?;
 
-            if settings.launch_maximized {
-                let _ = win.maximize();
-            }
+            #[cfg(not(any(target_os = "android", target_os = "ios")))]
+            {
+                window::restore_window_state(&win, &saved_state);
 
-            // Window event listeners for state persistence and close-to-tray
-            let app_win = app_handle.clone();
-            win.on_window_event(move |event| match event {
-                tauri::WindowEvent::CloseRequested { api, .. } => {
-                    let current_settings = commands::get_settings(app_win.clone());
-                    if current_settings.close_to_tray {
-                        api.prevent_close();
-                        if let Some(w) = app_win.get_webview_window("main") {
-                            let _ = w.hide();
+                if settings.launch_maximized {
+                    let _ = win.maximize();
+                }
+
+                // Window event listeners for state persistence and close-to-tray
+                let app_win = app_handle.clone();
+                win.on_window_event(move |event| match event {
+                    tauri::WindowEvent::CloseRequested { api, .. } => {
+                        let current_settings = commands::get_settings(app_win.clone());
+                        if current_settings.close_to_tray {
+                            api.prevent_close();
+                            if let Some(w) = app_win.get_webview_window("main") {
+                                let _ = w.hide();
+                            }
                         }
                     }
-                }
-                tauri::WindowEvent::Moved(_) | tauri::WindowEvent::Resized(_) => {
-                    if let Some(w) = app_win.get_webview_window("main") {
-                        window::save_window_state(&app_win, &w);
+                    tauri::WindowEvent::Moved(_) | tauri::WindowEvent::Resized(_) => {
+                        if let Some(w) = app_win.get_webview_window("main") {
+                            window::save_window_state(&app_win, &w);
+                        }
                     }
-                }
-                _ => {}
-            });
+                    _ => {}
+                });
+            }
 
+            let _ = settings; // suppress unused warning on mobile
             Ok(())
         })
         .run(tauri::generate_context!())
-        .expect("error while running YT Desktop application");
+        .expect("error while running Better YT application");
 }
 
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 fn setup_app_menu(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>> {
     let app_name = "Better YT";
 
@@ -129,11 +153,9 @@ fn setup_app_menu(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>
         .build()?;
 
     let back_item = MenuItem::with_id(app, "menu_back", "Back", true, Some("CmdOrCtrl+["))?;
-    let forward_item =
-        MenuItem::with_id(app, "menu_forward", "Forward", true, Some("CmdOrCtrl+]"))?;
+    let forward_item = MenuItem::with_id(app, "menu_forward", "Forward", true, Some("CmdOrCtrl+]"))?;
     let reload_item = MenuItem::with_id(app, "menu_reload", "Reload", true, Some("CmdOrCtrl+R"))?;
-    let search_item =
-        MenuItem::with_id(app, "menu_search", "Search...", true, Some("CmdOrCtrl+L"))?;
+    let search_item = MenuItem::with_id(app, "menu_search", "Search...", true, Some("CmdOrCtrl+L"))?;
     let settings_item = MenuItem::with_id(
         app,
         "menu_settings",
@@ -185,6 +207,7 @@ fn setup_app_menu(app: &mut tauri::App) -> Result<(), Box<dyn std::error::Error>
     Ok(())
 }
 
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
 fn setup_tray(app: &mut tauri::App) {
     let header_item = match MenuItem::with_id(app, "tray_header", "Better YT", false, None::<&str>)
     {

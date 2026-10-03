@@ -1,0 +1,134 @@
+name: Mobile Builds (Android APK & iOS IPA)
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r26b
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Setup Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android, armv7-linux-androideabi, x86_64-linux-android
+
+      - name: Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: 'src-tauri -> target'
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Initialize Tauri Android
+        run: npx tauri android init --ci --skip-targets-install
+
+      - name: Build Android APK
+        run: npx tauri android build --apk --target aarch64
+
+      - name: Locate and Package APK
+        id: find_apk
+        run: |
+          APK_FILE=$(find src-tauri/gen/android -name "*.apk" | head -n 1)
+          if [ -n "$APK_FILE" ]; then
+            cp "$APK_FILE" Better-YT_1.0.0_arm64.apk
+            echo "apk_path=Better-YT_1.0.0_arm64.apk" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload APK to Release
+        if: steps.find_apk.outputs.apk_path != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          files: Better-YT_1.0.0_arm64.apk
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-ios:
+    name: Build iOS IPA
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app/Contents/Developer
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Setup Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios
+
+      - name: Rust Cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: 'src-tauri -> target'
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build frontend
+        run: npm run build
+
+      - name: Initialize Tauri iOS
+        run: npx tauri ios init --ci --skip-targets-install
+
+      - name: Build iOS App (Unsigned for Sideloading)
+        run: npx tauri ios build --no-signing --target aarch64-apple-ios
+
+      - name: Package IPA
+        id: package_ipa
+        run: |
+          APP_PATH=$(find src-tauri/gen/ios -name "*.app" | grep -v "Simulator" | head -n 1)
+          if [ -n "$APP_PATH" ]; then
+            mkdir -p Payload
+            cp -r "$APP_PATH" Payload/
+            zip -rq Better-YT_1.0.0.ipa Payload
+            echo "ipa_path=Better-YT_1.0.0.ipa" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload IPA to Release
+        if: steps.package_ipa.outputs.ipa_path != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          files: Better-YT_1.0.0.ipa
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
